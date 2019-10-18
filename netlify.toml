@@ -1,4 +1,4 @@
 [[redirects]]
   from = "/story/*"
-  to = "/[id].html"
+  to = "/story/[id].html"
   status = 200
