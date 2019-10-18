@@ -1,0 +1,4 @@
+[[redirects]]
+  from = "/story/*"
+  to = "/[id].html"
+  status = 200
