@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { NextPage } from 'next'
 import Link from 'next/link'
 import { Container, CssBaseline, Typography, Button } from '@material-ui/core'
-import firebase from '../utils/firebase'
+import firebase from '../src/utils/firebase'
 
 const db = firebase.firestore()
 
@@ -40,7 +40,7 @@ const WithInitialProps: NextPage<Props> = () => {
         {storyId === null ? (
           <Typography>ロード中</Typography>
         ) : (
-          <Link href={`/story/${storyId}`}>
+          <Link href={`/story/${storyId}`} prefetch>
             <Button fullWidth color="primary" size="large" variant="outlined">
               話題を引く
             </Button>

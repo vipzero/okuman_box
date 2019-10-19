@@ -3,7 +3,7 @@ import { Container, Typography, Button } from '@material-ui/core'
 import { useRouter } from 'next/router'
 
 import Link from 'next/link'
-import firebase from '../../utils/firebase'
+import firebase from './utils/firebase'
 
 const db = firebase.firestore()
 
