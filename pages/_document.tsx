@@ -37,10 +37,16 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <html lang="en" dir="ltr">
+      <html lang="ja" dir="ltr">
         <Head>
           <meta charSet="utf-8" />
+          <title>億万長者話題ボックス</title>
           {/* Use minimum-scale=1 to enable GPU rasterization */}
+          <meta
+            name="description"
+            content="VIPのスレタイから話題になりそうなものを保存して提供"
+          />
+
           <meta
             name="viewport"
             content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
