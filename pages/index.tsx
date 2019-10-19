@@ -1,15 +1,53 @@
 import React, { useEffect, useState } from 'react'
 import { NextPage } from 'next'
-import Link from 'next/link'
-import { Container, CssBaseline, Typography, Button } from '@material-ui/core'
+import {
+  Container,
+  CssBaseline,
+  Typography,
+  Button,
+  ListItem,
+  List,
+  ListItemText,
+} from '@material-ui/core'
+import _ from 'lodash'
 import firebase from '../src/utils/firebase'
 
 const db = firebase.firestore()
 
+type Story = {
+  id: number
+  title: string
+}
+
+const isStory = (doc: firebase.firestore.DocumentData): doc is Story =>
+  typeof doc.id === 'number' && typeof doc.title === 'string'
+
 type Props = {}
 
 const WithInitialProps: NextPage<Props> = () => {
-  const [storyId, setStoryId] = useState<number | null>(null)
+  const [storyCount, setStoryCount] = useState<number | null>(null)
+  const [stories, setStories] = useState<Story[]>([])
+
+  const loadStory = async (count: number) => {
+    const ids = _.sampleSize(_.range(1, count), 3)
+
+    console.log(ids)
+
+    const stories = await Promise.all(
+      ids.map(async id => {
+        const snap = await db
+          .collection('stories')
+          .where('id', '==', Number(id))
+          .get()
+
+        const doc = snap.docs[0]
+
+        return doc && doc.data()
+      })
+    )
+
+    setStories(stories.filter(isStory))
+  }
 
   useEffect(() => {
     db.collection('all')
@@ -21,31 +59,44 @@ const WithInitialProps: NextPage<Props> = () => {
         }
         const info = snap.data()
         const count = (info && info.count) || 0
-        const storyId = Math.floor(Math.random() * count)
 
-        setStoryId(storyId)
+        setStoryCount(count)
+        loadStory(count)
       })
   }, [])
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="sm">
       <CssBaseline />
       <div>
-        <Typography style={{ padding: '16px 0' }} component="h1" variant="h5">
+        <Typography style={{ padding: '16px 0' }} component="h1" variant="h4">
           億万長者話題ボックス
         </Typography>
         <Typography style={{ padding: '16px 0' }} component="h2" variant="h5">
-          話題にどうぞ。5ch VIP からどちらを選ぶかネタを収集。
+          話題にどうぞ。VIP からネタを収集。 ネタ数: {storyCount || '---'}
         </Typography>
-        {storyId === null ? (
+        {storyCount === null ? (
           <Typography>ロード中</Typography>
         ) : (
-          <Link href={`/story/${storyId}`} prefetch>
-            <Button fullWidth color="primary" size="large" variant="outlined">
-              話題を引く
-            </Button>
-          </Link>
+          <Button
+            fullWidth
+            color="primary"
+            size="large"
+            variant="outlined"
+            onClick={() => {
+              loadStory(storyCount)
+            }}
+          >
+            話題を引く
+          </Button>
         )}
+        <List aria-label="secondary mailbox folders">
+          {stories.map(story => (
+            <ListItem key={story.id}>
+              <ListItemText primary={`${story.id}: ${story.title}`} />
+            </ListItem>
+          ))}
+        </List>
       </div>
     </Container>
   )
