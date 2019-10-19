@@ -29,6 +29,7 @@
     "@types/react": "^16.9.3",
     "@types/react-dom": "^16.9.1",
     "@types/styled-components": "^4.1.19",
+    "chch": "^1.2.0",
     "eslint": "^6.5.1",
     "eslint-config-nzap": "^1.2.4",
     "typescript": "3.6.3"
